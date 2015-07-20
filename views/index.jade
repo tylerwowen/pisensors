@@ -1,5 +1,24 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+	h1= title
+	p Welcome to #{title}
+
+	div
+		table(style='width: 80%', border='2')
+			thead
+					tr
+						th Sensor
+						th Value
+						th Unit
+						th Updated at
+						th Update Now
+				tbody
+					- for datum in sensorData
+						tr
+							td #{datum.sensor}
+							td #{datum.value}
+							td #{datum.unit}
+							td #{datum.updatedAt}
+							td(style="width:15%") 
+								button(style="width: 100%") Update
