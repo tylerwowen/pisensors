@@ -1,51 +1,38 @@
 var express = require('express');
 var router = express.Router();
-var Sensor = require('./objects/sensor.js');
 var fs = require('fs');
 var cacheFile = './routes/cache/cache.json';
 
 var data = [];
 
-var temperatureSensor = new Sensor("Temperature", "0.0", "Celsius");
-var humiditySensor = new Sensor("Humidity", "0.0", "%");
-var viberationSensor = new Sensor("Viberation", "False", "Boolean");
+var tempSensor = require('./objects/temperature.js');
+var humSensor = require('./objects/humidity.js');
+var vibSensor = require('./objects/vibration.js');
+
+var temperatureSensor =  new tempSensor("Temperature", "0.0", "Celsius");
+var humiditySensor = new humSensor("Humidity", "0.0", "%");
+var vibrationSensor = new vibSensor("Vibration", "False", "Boolean");
 
 data.push(temperatureSensor);
 data.push(humiditySensor);
-data.push(viberationSensor);
+data.push(vibrationSensor);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	updateDataFromCache();
-  res.render('index', { 
-		title: 'piSeonsers',
+	res.render('index', {
+		title: 'piSensors',
 		sensorData: data
 	});
 });
 
 function updateDataFromCache (){
-	cachedData = fs.readFileSync(cacheFile, 'utf8');
-  cachedData = JSON.parse(cachedData).sensors;
-	updateInstancesWithCache(cachedData);
+	var cachedData = fs.readFileSync(cacheFile, 'utf8');
+	cachedData = JSON.parse(cachedData).sensors;
+	data.forEach(function (sensor) {
+        sensor.fetchDataFromCache(cachedData);
+    });
 }
 
-function updateInstancesWithCache (cachedData) {
-	
-	for (var i = 0; i < cachedData.length; i++) {
-		switch(cachedData[i].sensor) {
-			case 'Temperature':	
-				temperatureSensor.fetchDataFromCache(cachedData[i]);
-				break;
-			case 'Humidity':	
-				humiditySensor.fetchDataFromCache(cachedData[i]);
-				break;
-			case 'Viberation':	
-				viberationSensor.fetchDataFromCache(cachedData[i]);
-				break;
-			default:
-				console.warn('Error! Out of scope.');
-		}
-	}
-}
 
 module.exports = router;
