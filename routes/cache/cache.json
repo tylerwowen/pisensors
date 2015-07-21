@@ -1,0 +1,22 @@
+{
+  "sensors": {
+    "Temperature": {
+      "sensor": "Temperature",
+      "value": "25.0",
+      "unit": "celsius",
+      "updatedAt": "11:37:31 PM"
+    },
+    "Humidity": {
+      "sensor": "Humidity",
+      "value": "35.0",
+      "unit": "%",
+      "updatedAt": "11:39:31 PM"
+    },
+    "Vibration": {
+      "sensor": "Vibration",
+      "value": "True",
+      "unit": "celsius",
+      "updatedAt": "11:37:31 PM"
+    }
+  }
+}
