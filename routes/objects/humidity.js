@@ -16,7 +16,7 @@ Humidity.prototype.fetchDataFromSensor = function() {
     var thisObject = this;
     exec(cmd,
         {
-            timeout:2000
+            timeout:3000
         },
         function(error, stdout, stderr) {
             if (error == null) {
