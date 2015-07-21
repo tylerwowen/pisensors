@@ -19,7 +19,7 @@ Temperature.prototype.fetchDataFromSensor = function() {
             timeout:2000
         },
         function(error, stdout, stderr) {
-            if (error != null) {
+            if (error == null) {
                 thisObject.value = stdout;
                 thisObject.updateTime();
             } else {
