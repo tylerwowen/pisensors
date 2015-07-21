@@ -10,7 +10,7 @@ function Vibration(sensor, value, unit) {
 
 Vibration.prototype = new Sensor();
 
-Vibration.prototype.fetchDataFromSensor = function() {
+Vibration.prototype.fetchDataFromSensor = function(callback) {
     var exec = require('child_process').exec;
     var cmd = 'sudo ./scripts/temphum.py 4 temp';
     var thisObject = this;
@@ -22,6 +22,7 @@ Vibration.prototype.fetchDataFromSensor = function() {
             if (error == null) {
                 thisObject.value = stdout;
                 thisObject.updateTime();
+                callback();
             } else {
                 console.log('exec error: ' + error);
             }
