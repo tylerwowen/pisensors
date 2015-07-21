@@ -29,7 +29,7 @@ router.get('/', function(req, res) {
 router.get('/update/:reqSensor', function(req, res, next) {
 	processEndpoint(req, res, function(found){
 		if (!found) {
-			var err = new Error('Endpoint Not Found');
+			var err = new Error('Endpoint Not Supported');
 			err.status = 503;
 			next(err);
 		}
