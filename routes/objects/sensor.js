@@ -9,12 +9,29 @@ Sensor.prototype.setValue = function(value) {
 	this.value = value;
 };
 
-Sensor.prototype.fetchDataFromSensor = function() {
-
+Sensor.prototype.fetchDataFromSensor = function(cmd, callback) {
+	var exec = require('child_process').exec;
+	var thisObject = this;
+	exec(cmd,
+		{
+			timeout:3000
+		},
+		function(error, stdout, stderr) {
+			if (error == null) {
+				thisObject.value = stdout;
+				thisObject.updateTime()
+				callback();
+			} else {
+				console.log('exec error: ' + error);
+				callback(error);
+			}
+		}
+	);
 };
 
-Sensor.prototype.fetchDataFromCache = function(cachedData) {
-
+Sensor.prototype.fetchDataFromCache = function(JSONData) {
+	this.value = JSONData.value;
+	this.updatedAt = JSONData.updatedAt;
 };
 
 Sensor.prototype.updateTime = function() {

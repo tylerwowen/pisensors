@@ -27,29 +27,38 @@ router.get('/', function(req, res) {
 });
 
 router.get('/update/:reqSensor', function(req, res, next) {
-	data.forEach(function(sensor) {
-		if (sensor.sensor == req.params.reqSensor) {
-			sensor.fetchDataFromSensor();
-			setTimeout(function() {
-				res.json(sensor);
-			}, 3000);
+	processEndpoint(req, res, function(found){
+		if (!found) {
+			var err = new Error('Endpoint Not Found');
+			err.status = 500;
+			next(err);
 		}
 	});
-	if (!res.headersSent) {
-		var err = new Error('Endpoint Not Found');
-		err.status = 500;
-		next(err);
-	}
-
 });
 
+function processEndpoint(req, res, callback) {
+	var found = false;
+	data.forEach(function(sensor) {
+		if (sensor.sensor == req.params.reqSensor) {
+			found = true;
+			sensor.fetchDataFromSensor(function(error){
+				if (!error) {
+					res.json(sensor);
+				} else {
+					res.status(501).send('python script execution error!');
+				}
+			});
+		}
+	});
+	callback(found);
+}
 
 function updateDataFromCache() {
 	var cachedData = fs.readFileSync(cacheFile, 'utf8');
 	cachedData = JSON.parse(cachedData).sensors;
 	data.forEach(function (sensor) {
-		sensor.fetchDataFromCache(cachedData);
-	});
+        sensor.fetchDataFromCache(cachedData);
+    });
 }
 
 
