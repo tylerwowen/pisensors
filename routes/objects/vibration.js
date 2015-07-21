@@ -26,7 +26,7 @@ Vibration.prototype.fetchDataFromSensor = function() {
                 console.log('exec error: ' + error);
             }
         }
-    );thisth
+    );
 };
 
 Vibration.prototype.fetchDataFromCache = function(cachedData) {

@@ -29,8 +29,9 @@ router.get('/', function(req, res) {
 router.get('/update/:reqSensor', function(req, res, next) {
 	data.forEach(function(sensor) {
 		if (sensor.sensor == req.params.reqSensor) {
-			sensor.fetchDataFromSensor();
-			res.json(sensor);
+			sensor.fetchDataFromSensor(function(){
+				res.json(sensor);
+			});
 		}
 	});
 	if (!res.headersSent) {
