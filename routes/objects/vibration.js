@@ -18,9 +18,10 @@ Vibration.prototype.fetchDataFromSensor = function() {
             timeout:2000
         },
         function(error, stdout, stderr) {
-            console.log(stdout);
-            console.log(stderr);
-            if (error !== null) {
+            if (error == null) {
+                this.value = stdout;
+                this.updateTime();
+            } else {
                 console.log('exec error: ' + error);
             }
         }

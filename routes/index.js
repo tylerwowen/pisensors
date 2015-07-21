@@ -18,7 +18,7 @@ data.push(humiditySensor);
 data.push(vibrationSensor);
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
 	updateDataFromCache();
 	res.render('index', {
 		title: 'piSensors',
@@ -26,7 +26,23 @@ router.get('/', function(req, res, next) {
 	});
 });
 
-function updateDataFromCache (){
+router.get('/update/:reqSensor', function(req, res, next) {
+	data.forEach(function(sensor) {
+		if (sensor.sensor == req.params.reqSensor) {
+			sensor.fetchDataFromSensor();
+			res.json(sensor);
+		}
+	});
+	if (!res.headersSent) {
+		var err = new Error('Endpoint Not Found');
+		err.status = 500;
+		next(err);
+	}
+
+});
+
+
+function updateDataFromCache() {
 	var cachedData = fs.readFileSync(cacheFile, 'utf8');
 	cachedData = JSON.parse(cachedData).sensors;
 	data.forEach(function (sensor) {

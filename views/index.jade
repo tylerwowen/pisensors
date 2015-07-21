@@ -16,9 +16,13 @@ block content
 				tbody
 					- for datum in sensorData
 						tr
-							td #{datum.sensor}
-							td #{datum.value}
-							td #{datum.unit}
-							td #{datum.updatedAt}
+							td= datum.sensor
+							td(id= datum.sensor + "_val")= datum.value
+							td= datum.unit
+							td(id= datum.sensor + "_upd")= datum.updatedAt
 							td(style="width:15%") 
-								button(style="width: 100%") Update
+								button(style="width: 100%" id=datum.sensor class="upd_btn") Update
+
+block scripts
+	script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")
+	script(src="/javascript/main.js")
