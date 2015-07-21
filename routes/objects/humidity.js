@@ -12,7 +12,7 @@ Humidity.prototype = new Sensor();
 
 Humidity.prototype.fetchDataFromSensor = function() {
     var exec = require('child_process').exec;
-    var cmd = 'sudo /scripts/temphum.py 4 hum';
+    var cmd = 'sudo ./scripts/temphum.py 4 hum';
     exec(cmd,
         {
             timeout:2000

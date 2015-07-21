@@ -12,7 +12,7 @@ Temperature.prototype = new Sensor();
 
 Temperature.prototype.fetchDataFromSensor = function() {
     var exec = require('child_process').exec;
-    var cmd = 'sudo /scripts/temphum.py 4 temp';
+    var cmd = 'sudo ./scripts/temphum.py 4 temp';
     exec(cmd,
         {
             timeout:2000
