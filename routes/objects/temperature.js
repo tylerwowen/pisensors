@@ -10,7 +10,7 @@ function Temperature(sensor, value, unit) {
 
 Temperature.prototype = new Sensor();
 
-Temperature.prototype.fetchDataFromSensor = function(callback) {
+Temperature.prototype.fetchDataFromSensor = function() {
     var exec = require('child_process').exec;
     var cmd = 'sudo ./scripts/temphum.py 4 temp';
     var thisObject = this;
@@ -22,7 +22,6 @@ Temperature.prototype.fetchDataFromSensor = function(callback) {
             if (error == null) {
                 thisObject.value = stdout;
                 thisObject.updateTime();
-                callback();
             } else {
                 console.log('exec error: ' + error);
             }

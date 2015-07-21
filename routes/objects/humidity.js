@@ -10,7 +10,7 @@ function Humidity(sensor, value, unit) {
 
 Humidity.prototype = new Sensor();
 
-Humidity.prototype.fetchDataFromSensor = function(callback) {
+Humidity.prototype.fetchDataFromSensor = function() {
     var exec = require('child_process').exec;
     var cmd = 'sudo ./scripts/temphum.py 4 hum';
     var thisObject = this;
@@ -22,7 +22,6 @@ Humidity.prototype.fetchDataFromSensor = function(callback) {
             if (error == null) {
                 thisObject.value = stdout;
                 thisObject.updateTime();
-                callback();
             } else {
                 console.log('exec error: ' + error);
             }

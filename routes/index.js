@@ -29,9 +29,10 @@ router.get('/', function(req, res) {
 router.get('/update/:reqSensor', function(req, res, next) {
 	data.forEach(function(sensor) {
 		if (sensor.sensor == req.params.reqSensor) {
-			sensor.fetchDataFromSensor(function(){
+			sensor.fetchDataFromSensor();
+			setTimeout(function() {
 				res.json(sensor);
-			});
+			}, 3000);
 		}
 	});
 	if (!res.headersSent) {
@@ -47,8 +48,8 @@ function updateDataFromCache() {
 	var cachedData = fs.readFileSync(cacheFile, 'utf8');
 	cachedData = JSON.parse(cachedData).sensors;
 	data.forEach(function (sensor) {
-        sensor.fetchDataFromCache(cachedData);
-    });
+		sensor.fetchDataFromCache(cachedData);
+	});
 }
 
 
