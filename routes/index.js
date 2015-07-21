@@ -30,7 +30,7 @@ router.get('/update/:reqSensor', function(req, res, next) {
 	processEndpoint(req, res, function(found){
 		if (!found) {
 			var err = new Error('Endpoint Not Found');
-			err.status = 500;
+			err.status = 503;
 			next(err);
 		}
 	});
@@ -45,7 +45,7 @@ function processEndpoint(req, res, callback) {
 				if (!error) {
 					res.json(sensor);
 				} else {
-					res.status(501).send('python script execution error!');
+					res.status(500).send('python script execution error!');
 				}
 			});
 		}
