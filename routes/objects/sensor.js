@@ -1,3 +1,6 @@
+var fs = require('fs');
+var cacheFile = './routes/cache/cache.json';
+
 function Sensor(sensor, value, unit) {
 	this.sensor = sensor;
 	this.value = value;
@@ -32,6 +35,10 @@ Sensor.prototype.fetchDataFromSensor = function(cmd, callback) {
 Sensor.prototype.fetchDataFromCache = function(JSONData) {
 	this.value = JSONData.value;
 	this.updatedAt = JSONData.updatedAt;
+};
+
+Sensor.prototype.updateCache = function() {
+	var cachedData = fs.readFileSync(cacheFile, 'utf8');
 };
 
 Sensor.prototype.updateTime = function() {
