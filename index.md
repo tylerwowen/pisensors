@@ -1,4 +1,7 @@
 ---
+layout: page
+title: PiSensors
+permalink: /home
 ---
 
 PiSensors
