@@ -1,3 +1,6 @@
+---
+---
+
 PiSensors
 =========
 What's the temperature in my room? Do I need to water my plants? I have a Raspberry Pi with several sensors connected to it, it's not hard to answer these questions. SSH to your Pi, run a Python script you wrote before and then I can get the data. The problem here is, however, how to access them easily? A web app is a good candidate for this purpose.
