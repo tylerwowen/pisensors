@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Pisensors by tylerwowen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Pisensors</h1>
+      <h2 class="project-tagline">A web app that displays sensors output from Raspberry Pi</h2>
+      <a href="https://github.com/tylerwowen/pisensors" class="btn">View on GitHub</a>
+      <a href="https://github.com/tylerwowen/pisensors/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/tylerwowen/pisensors/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="pisensors" class="anchor" href="#pisensors" aria-hidden="true"><span class="octicon octicon-link"></span></a>PiSensors</h1>
+
+<p>What's the temperature in my room? Do I need to water my plants? Ihave a Raspberry Pi with several sensors connected to it, it's not hard to answer these questions. SSH to your Pi, run a Python script you wrote before and then I can get the data. The problem here is, however, how to access them easily? A web app is a good candidate for this purpose.</p>
+
+<p><a href="https://github.com/tylerwowen/pisensors">Github repository</a>.</p>
+
+<h2>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h2>
+
+<hr>
+
+<p>The basic idea is that to create a web app that shows the data from different sensors. The data can be either cached or just updated. The information is presented in a table, with an <code>Update</code> button at the end of each row. Once <code>Update</code> is clicked, the frontend makes an API call so the backend activates the sensor and sends back the date.</p>
+
+<h2>
+<a id="setup" class="anchor" href="#setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup</h2>
+
+<hr>
+
+<p>I chose <em>Node.js</em> with <em>Express.js</em> framework as my backend. For frontend, apart from <em>HTML</em>, <em>Javascript</em> and <em>CSS</em>, I also used <em>Jade</em> to generate pages.</p>
+
+<h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<ul>
+<li>Install Node.js + npm<br>
+<code>sudo apt-get install node</code>
+</li>
+<li>
+<p>Choose a proper directory and clone my <a href="https://github.com/tylerwowen/pisensors">git repo</a></p>
+
+<div class="highlight highlight-sh"><pre><span class="pl-c1">cd</span> somewhere/
+git clone https://github.com/tylerwowen/pisensors
+<span class="pl-c1">cd</span> pisensors
+npm install</pre></div>
+
+<p><code>npm install</code> will install all required dependencies that are defined in package.json</p>
+</li>
+<li>
+<p>I include a python script that reads from <code>DHT 11 Temperature and Humidity</code> sensor. Change permission of <code>temphum.py</code> if you see any thing like: <code>sudo: ./scripts/temphum.py: command not found</code></p>
+
+<div class="highlight highlight-sh"><pre>chmod 755 pisensor/scripts/temphum.py</pre></div>
+</li>
+</ul>
+
+<p>After the above steps, the layout should be like this:</p>
+
+<pre><code>├── app.js
+├── bin
+│   └── www
+├── node_modules
+│   ├── body-parser
+│   ├── debug
+│   ├── express
+│   ├── jade
+|   └── morgan
+├── package.json
+├── public
+│   ├── images
+│   ├── javascripts
+│   └── stylesheets
+│       └── style.css
+├── routes
+│   ├── cache
+│       └── cache.json
+│   ├── objects
+│       ├── humidity.js
+│       ├── sensor.js
+│       ├── temperature.js
+│       └── vibration.js
+│   ├── index.js
+│   └── users.js
+├── scripts
+|   └── temphum.py
+└── views
+|    ├── error.jade
+|    ├── index.jade
+|    └── layout.jade
+</code></pre>
+
+<h3>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h3>
+
+<h4>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h4>
+
+<ul>
+<li>To run /scripts/temphum.py, you need to install the Adtruit_DHT library.
+<code>bash
+sudo apt-get update
+sudo apt-get install build-essential python-dev
+git clone https://github.com/adafruit/Adafruit_Python_DHT.git dhtlib
+cd dhtlib
+sudo python setup.py install
+cd .. &amp;&amp; sudo rm -r dhtlib
+</code>
+</li>
+<li>If you have other sensors instead, you should also place your scripts/programs under this directory</li>
+</ul>
+
+<h4>
+<a id="add-new-sensors" class="anchor" href="#add-new-sensors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add New Sensors</h4>
+
+<ul>
+<li>
+<p>In /routes/objects, create a subclass of sensors.js. For example, create a light.js</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> Sensor <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>./sensor.js<span class="pl-pds">'</span></span>);
+
+<span class="pl-k">function</span> <span class="pl-en">Light</span>(<span class="pl-smi">sensor</span>, <span class="pl-smi">value</span>, <span class="pl-smi">unit</span>) {
+    Sensor.<span class="pl-c1">call</span>(<span class="pl-v">this</span>, sensor, value, unit);
+}
+
+<span class="pl-c1">Light</span>.<span class="pl-c1">prototype</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Sensor</span>();
+
+<span class="pl-c1">Light</span>.<span class="pl-c1">prototype</span>.<span class="pl-en">fetchDataFromSensor</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">callback</span>) {
+    <span class="pl-k">var</span> cmd <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>sudo ./scripts/light.py<span class="pl-pds">'</span></span>; <span class="pl-c">// You need to write this script</span>
+    Sensor.<span class="pl-c1">prototype</span>.fetchDataFromSensor.<span class="pl-c1">call</span>(<span class="pl-v">this</span>, cmd, callback);
+};
+
+<span class="pl-c1">Light</span>.<span class="pl-c1">prototype</span>.<span class="pl-en">fetchDataFromCache</span> <span class="pl-k">=</span> <span class="pl-k">function</span>(<span class="pl-smi">cachedData</span>) {
+    <span class="pl-k">var</span> JSONData <span class="pl-k">=</span> cachedData.light;
+    Sensor.<span class="pl-c1">prototype</span>.fetchDataFromCache.<span class="pl-c1">call</span>(<span class="pl-v">this</span>, JSONData);
+};
+
+<span class="pl-c1">module</span>.exports <span class="pl-k">=</span> Light;</pre></div>
+</li>
+<li>In /routes/index.js
+
+<ul>
+<li>Add <code>litsSensor = require('./objects/light.js');</code> under <code>var vibSensor = require('./objects/vibration.js');</code>
+</li>
+<li>Add <code>var lightSensor = new litSensor("Light", "False", "Boolean");</code> under <code>var vibrationSensor = new vibSensor("Vibration", "False", "Boolean");</code>
+</li>
+<li>Add <code>data.push(lightSensor);</code> under <code>data.push(vibrationSensor);</code>
+</li>
+</ul>
+</li>
+<li>In /routes/cahe/cache.json</li>
+</ul>
+
+<h2>
+<a id="implementation" class="anchor" href="#implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementation</h2>
+
+<hr>
+
+<h3>
+<a id="routesindexjs" class="anchor" href="#routesindexjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>/routes/index.js</h3>
+
+<p>This file is the core of this web application. It has two responsibilities (I know this violates the Single Responsibility Principle, but I will explain):</p>
+
+<ul>
+<li>Generates the contents of index page</li>
+<li>Responses to API calls</li>
+</ul>
+
+<h3>
+<a id="routesobjectssensorjs" class="anchor" href="#routesobjectssensorjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>/routes/objects/Sensor.js</h3>
+
+<h2>
+<a id="outcome" class="anchor" href="#outcome" aria-hidden="true"><span class="octicon octicon-link"></span></a>Outcome</h2>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/tylerwowen/pisensors">Pisensors</a> is maintained by <a href="https://github.com/tylerwowen">tylerwowen</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
