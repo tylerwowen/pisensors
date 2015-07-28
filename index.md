@@ -1,6 +1,6 @@
 ---
 layout: default
-title: PiSensors
+title: Home
 permalink: /index.html
 ---
 
@@ -147,14 +147,17 @@ When you need to add a new sensor.
 
 ### /routes/index.js
 This file is the core of this web application. It has two responsibilities (I know this violates the Single Responsibility Principle, but I will explain):
-  * Generates the contents of index page
-  * Responses to API calls in JSON format
+
+* Generates the contents of index page
+
+* Responses to API calls in JSON format
 
 ### /routes/objects/Sensor.js
 It is the super class for all other specific sensors. It's not totally abstract, and it has some concrete methods.
 
 ### /views/index.jade
 The index.jade provides a layout for the data table. It works for any number of sensors. To do so, it loops over the array `sensorData` which is passed from `index.js`.  
+
 ### /public/javascript/main.js
 This is the front-end javascript that listens to click events. Once an user clicks the `Update` button of a sensor, the scripts calls the corresponding API and updates the row based on the response from backend. An example API call: `http://127.0.0.1:3000/update/Temperature`.
 
