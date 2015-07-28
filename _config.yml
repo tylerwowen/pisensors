@@ -15,6 +15,6 @@ github_username:  tylerwowen
 
 
 # Build settings
-markdown: kramdown
-kramdown:
+markdown: redcarpet
+redcarpet:
   input: GFM
