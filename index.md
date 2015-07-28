@@ -1,7 +1,7 @@
 ---
 layout: page
 title: PiSensors
-permalink: /home
+permalink: /index.html
 ---
 
 PiSensors

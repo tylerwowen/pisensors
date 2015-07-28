@@ -9,5 +9,6 @@ baseurl: "/pisensors" # the subpath of your site, e.g. /blog/
 url: "http://tylerwowen.github.io" # the base hostname & protocol for your site
 github_username:  tylerwowen
 
+
 # Build settings
 markdown: kramdown
