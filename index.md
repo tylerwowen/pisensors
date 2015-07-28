@@ -1,11 +1,9 @@
 ---
-layout: page
+layout: default
 title: PiSensors
 permalink: /index.html
 ---
 
-PiSensors
-=========
 What's the temperature in my room? Do I need to water my plants? I have a Raspberry Pi with several sensors connected to it, it's not hard to answer these questions. SSH to your Pi, run a Python script you wrote before and then I can get the data. The problem here is, however, how to access them easily? A web app is a good candidate for this purpose.
 
 [Github repository](https://github.com/tylerwowen/pisensors).
@@ -19,24 +17,27 @@ The basic idea is that to create a web app that shows the data from different se
 I chose *Node.js* with *Express.js* framework as my backend. For front-end, apart from *HTML*, *Javascript* and *CSS*, I also used *Jade* to generate pages.
 
 ### Installation
-  * Install Node.js + npm  
+* Install Node.js + npm  
   `sudo apt-get install node`
-  * Choose a proper directory and clone my [git repo](https://github.com/tylerwowen/pisensors)
-    ```sh
-    cd somewhere/
-    git clone https://github.com/tylerwowen/pisensors
-    cd pisensors
-    npm install
-    ```
+* Choose a proper directory and clone my [git repo](https://github.com/tylerwowen/pisensors)
 
-    `npm install` will install all required dependencies that are defined in package.json
+  ```bash
+  cd somewhere/
+  git clone https://github.com/tylerwowen/pisensors
+  cd pisensors
+  npm install
+  ```
 
-  * I include a python script that reads from `DHT 11 Temperature and Humidity` sensor. Change permission of `temphum.py` if you see any thing like: `sudo: ./scripts/temphum.py: command not found`
-    ```sh
-    chmod 755 pisensor/scripts/temphum.py
-    ```  
+  `npm install` will install all required dependencies that are defined in package.json
+
+* I include a python script that reads from `DHT 11 Temperature and Humidity` sensor. Change permission of `temphum.py` if you see any thing like: `sudo: ./scripts/temphum.py: command not found`
+
+  ```sh
+  chmod 755 pisensor/scripts/temphum.py
+  ```  
 
 After the above steps, the layout should be like this:
+
 ```
 ├── app.js
 ├── bin
@@ -70,69 +71,80 @@ After the above steps, the layout should be like this:
     ├── index.jade
     └── layout.jade
 ```
+
 ### Configuration
 
 #### Dependencies
-  * To run /scripts/temphum.py, you need to install the Adtruit_DHT library.
-    ```bash
-    sudo apt-get update
-    sudo apt-get install build-essential python-dev
-    git clone https://github.com/adafruit/Adafruit_Python_DHT.git dhtlib
-    cd dhtlib
-    sudo python setup.py install
-    cd .. && sudo rm -r dhtlib
-    ```
-  * If you have other sensors instead, you should also place your scripts/programs under this directory
+
+* To run /scripts/temphum.py, you need to install the Adtruit_DHT library.
+
+  ```bash  
+  sudo apt-get update
+  sudo apt-get install build-essential python-dev
+  git clone https://github.com/adafruit/Adafruit_Python_DHT.git dhtlib
+  cd dhtlib
+  sudo python setup.py install
+  cd .. && sudo rm -r dhtlib
+  ```
+
+* If you have other sensors instead, you should also place your scripts/programs under this directory
 
 #### Add New Sensors
-When you need to add
-  * In /routes/objects, create a subclass of sensors.js. For example, create a light.js
-    ```javascript
-    var Sensor = require('./sensor.js');
+When you need to add a new sensor.
 
-    function Light(sensor, value, unit) {
-        Sensor.call(this, sensor, value, unit);
-    }
+* In /routes/objects, create a subclass of sensors.js. For example, create a light.js
 
-    Light.prototype = new Sensor();
+  ```javascript
+  var Sensor = require('./sensor.js');
 
-    Light.prototype.fetchDataFromSensor = function(callback) {
-        var cmd = 'sudo ./scripts/light.py'; // You need to write this script
-        Sensor.prototype.fetchDataFromSensor.call(this, cmd, callback);
-    };
+  function Light(sensor, value, unit) {
+    Sensor.call(this, sensor, value, unit);
+  }
 
-    Light.prototype.fetchDataFromCache = function(cachedData) {
-        var JSONData = cachedData.light;
-        Sensor.prototype.fetchDataFromCache.call(this, JSONData);
-    };
+  Light.prototype = new Sensor();
 
-    module.exports = Light;
-    ```
-  * In /routes/index.js
-    * Add `litsSensor = require('./objects/light.js');` under `var vibSensor = require('./objects/vibration.js');`
-    * Add `var lightSensor = new litSensor("Light", "False", "Boolean");` under `var vibrationSensor = new vibSensor("Vibration", "False", "Boolean");`
-    * Add `data.push(lightSensor);` under `data.push(vibrationSensor);`
-  * In /routes/cahe/cache.json, append initial data to make it look like this:
-    ```json
-    ...
-    "Vibration": {
-        "sensor": "Vibration",
-        "value": "True",
-        "unit": "celsius",
-        "updatedAt": "11:37:31 PM"
-    },
-    "Light": {
-        "sensor": "Light",
-        "value": "True",
-        "unit": "celsius",
-        "updatedAt": "12:27:31 PM"
-    }
-    ...
-    ```
+  Light.prototype.fetchDataFromSensor = function(callback) {
+    var cmd = 'sudo ./scripts/light.py'; // You need to write this script
+    Sensor.prototype.fetchDataFromSensor.call(this, cmd, callback);
+  };
+
+  Light.prototype.fetchDataFromCache = function(cachedData) {
+    var JSONData = cachedData.light;
+    Sensor.prototype.fetchDataFromCache.call(this, JSONData);
+  };
+
+  module.exports = Light;
+  ```
+
+* In /routes/index.js
+  * Add `litsSensor = require('./objects/light.js');` under `var vibSensor = require('./objects/vibration.js');`
+  * Add `var lightSensor = new litSensor("Light", "False", "Boolean");` under `var vibrationSensor = new vibSensor("Vibration", "False", "Boolean");`
+  * Add `data.push(lightSensor);` under `data.push(vibrationSensor);`
+
+* In /routes/cahe/cache.json, append initial data to make it look like this:
+
+  ```json
+  ...
+  "Vibration": {
+    "sensor": "Vibration",
+    "value": "True",
+    "unit": "celsius",
+    "updatedAt": "11:37:31 PM"
+  },
+  "Light": {
+    "sensor": "Light",
+    "value": "True",
+    "unit": "celsius",
+    "updatedAt": "12:27:31 PM"
+  }
+  ...
+  ```
+
     Since I haven't implemented the database at this moment(July 26, 2015), it's necessary to modify the cache file manually. Later the MongoDB will be added and this part will be discarded.
 
 ## Implementation
 ------------------
+
 ### /routes/index.js
 This file is the core of this web application. It has two responsibilities (I know this violates the Single Responsibility Principle, but I will explain):
   * Generates the contents of index page
@@ -148,6 +160,7 @@ This is the front-end javascript that listens to click events. Once an user clic
 
 ## Outcome
 ----------
+
 ## Todo
 -------
 [ ] Add MongoDB supports  
