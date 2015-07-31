@@ -5,7 +5,7 @@ exclude: ["README.md"]
 title: PiSensors
 tag_text: PiSensors
 email: ouyang@cs.ucsb.edu
-description: This is my first blog built on jekyll. Linke to my <a href="http://tyler.gauchomeet.me">WordPress blog</a>.
+description: This is my first blog built on jekyll. 
 baseurl: "/pisensors" # the subpath of your site, e.g. /blog/
 url: "http://tylerwowen.github.io" # the base hostname & protocol for your site
 github_username:  tylerwowen
