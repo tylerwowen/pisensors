@@ -139,8 +139,7 @@ When you need to add a new sensor.
   }
   ...
   ```
-
-    Since I haven't implemented the database at this moment(July 26, 2015), it's necessary to modify the cache file manually. Later the MongoDB will be added and this part will be discarded.
+  Since I haven't implemented the database at this moment(July 26, 2015), it's necessary to modify the cache file manually. Later the MongoDB will be added and this part will be discarded.
 
 ## Implementation
 ------------------
@@ -163,6 +162,9 @@ This is the front-end javascript that listens to click events. Once an user clic
 
 ## Outcome
 ----------
+
+The web page looks like the picture below. 
+![alt test]({{ site.baseurl }}/images/pisensors_web_ui.png "PiSensors Web Screenshot")
 
 ## Todo
 -------
